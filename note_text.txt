@@ -1,0 +1,40 @@
+Bu dosyada, URL kısaltma sistemini 
+oluşturan üç hizmeti tanımlayacaksınız: 
+bir Python API sunucusu, kalıcı depolama için bir PostgreSQL veritabanı ve hızlı sorgulamalar için bir Redis önbelleği.
+
+Dosya ayrıca Docker Compose'a; hizmetlerin birbirleriyle nasıl bağlantı kuracağını, 
+hangi sırayla başlatılacağını 
+ve bir sonrakinin başlatılmasından önce her birinin düzgün çalıştığının nasıl doğrulanacağını bildirir.
+
+
+Neden üç ayrı servis?
+
+Bu, sorumlulukların ayrılmasıdır. 
+API, HTTP mantığını yönetir, PostgreSQL kalıcı depolamayı (verilerin yeniden başlatmalardan sonra da korunmasını) sağlar 
+ve Redis hızı (bellek içi aramalar mikrosaniyeler içinde gerçekleşirken, disk için milisaniyeler sürer) sağlar.
+
+Sistem tasarımı mülakatında, mülakatçılar sadece var olduklarını değil,
+her birinin neden var olduğunu da açıklamanızı isterler. Her servis bağımsız olarak ölçeklenebilir.
+
+
+
+💡 Bu dosya ne işe yarar?
+
+Bu dosya, birlikte çalışan üç hizmeti tanımlar:
+
+
+web, Python API sunucunuzdur. ./app klasöründen oluşturulur 
+ve makinenizde 5000 numaralı bağlantı noktasını (port) kullanıma açar.
+
+
+
+db, URL eşlemelerini kalıcı olarak depolayan bir PostgreSQL veritabanıdır. 
+Sağlık kontrolü (healthcheck), bağlantıları kabul ettiğini doğrulamak için `pg_isready -U postgres` komutunu kullanır.
+
+
+
+redis, hızlı sorgulamalar için kullanılan bir Redis önbelleğidir. 
+Sağlık kontrolü, hazır olduğunu doğrulamak için `redis-cli ping` komutunu kullanır.
+
+`condition: service_healthy` içeren `depends_on` yapılandırması, 
+API sunucusu başlamadan önce veritabanı ve önbelleğin tamamen hazır olmasını sağlar.

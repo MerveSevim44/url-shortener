@@ -1,0 +1,13 @@
+# HTTP API sunucusu - web isteklerini karşılar
+flask==3.0.0
+
+# PostgreSQL bağlantısı için sürücü
+# psycopg2-binary = derleme gerektirmeyen hazır versiyon
+psycopg2-binary==2.9.9
+
+# Redis bağlantısı için Python istemcisi
+redis==5.0.1
+
+# Flask için production-ready WSGI sunucusu
+# (Flask'ın kendi sunucusu geliştirme içindir, production için gunicorn kullanılır)
+gunicorn==21.2.0
